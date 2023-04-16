@@ -1,17 +1,17 @@
-import React, { useContext, useState, useSyncExternalStore } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../Provider/AuthProvider';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
     const { createUser } = useContext(AuthContext);
-    
+    const [seePass, setSeePass] = useState(false);
 
     console.log(createUser);
 
     const registerHandler = (event) => {
         event.preventDefault();
-        
+
         const from = event.target;
         const name = from.name.value;
         const email = from.email.value;
@@ -24,17 +24,22 @@ const Register = () => {
                 const loggedUser = result.user;
                 console.log(loggedUser);
                 toast('Register SuccessFully');
-              from.reset();
-                
+                from.reset();
+
             })
             .catch(error => {
                 console.log(error);
                 toast(error.message)
 
             })
-           
 
-
+    }
+    const showPass = () => {
+        if (!seePass) {
+            setSeePass(true);
+        } else {
+            setSeePass(false);
+        }
     }
     return (
         <div>
@@ -62,9 +67,10 @@ const Register = () => {
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" name='password' placeholder="Enter Strong Password" className="input input-bordered" />
-                                <label className="label">
-                                    <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                <input type={!seePass?"password":"text"} name='password' placeholder="Enter Strong Password" className="input input-bordered" />
+                                <label className="cursor-pointer label">
+                                    <span className="label-text">Show password</span>
+                                    <input type="checkbox" onClick={showPass} className="checkbox checkbox-success" />
                                 </label>
                             </div>
                             <div className="form-control mt-6">
